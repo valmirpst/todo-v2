@@ -1,12 +1,4 @@
-import {
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useEffect, useState } from 'react';
 import { Task } from '../@types/task';
 
 interface Todo {
@@ -17,9 +9,7 @@ interface Todo {
 const TodoContext = createContext<Todo | null>(null);
 
 export function TodoProvider({ children }: PropsWithChildren) {
-  const [tasks, setTasks] = useState<Task[]>(
-    JSON.parse(localStorage.getItem('todo_tasks') || '[]')
-  );
+  const [tasks, setTasks] = useState<Task[]>(JSON.parse(localStorage.getItem('todo_tasks') || '[]'));
 
   useEffect(() => {
     localStorage.setItem('todo_tasks', JSON.stringify(tasks));

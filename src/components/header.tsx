@@ -1,22 +1,33 @@
 import { BookCheck, Plus } from 'lucide-react';
-import { useTodo } from '../contexts/todo-context';
 import { useState } from 'react';
 import { Task } from '../@types/task';
+import { useTodo } from '../contexts/todo-context';
 
 export default function Header() {
-  const { setTasks } = useTodo();
+  const { tasks, setTasks } = useTodo();
 
   const [inputValue, setInputValue] = useState('');
 
   function handleNewTask() {
-    if (!inputValue) window.alert('A tarefa não pode estar vazia!');
+    if (!inputValue) {
+      window.alert('A tarefa não pode estar vazia!');
+      return;
+    }
     const date = new Date();
     const newTask: Task = {
       text: inputValue,
       updated: date,
+      checked: false,
     };
 
-    setTasks((prev) => [...prev, newTask]);
+    const includes = tasks.some(task => {
+      if (task.text === newTask.text) return true;
+    });
+    if (includes) {
+      window.alert('Ja existe uma tarefa com esse nome.');
+      return;
+    }
+    setTasks(prev => [...prev, newTask]);
     setInputValue('');
   }
 
@@ -29,14 +40,14 @@ export default function Header() {
           <span className="font-bold text-4xl text-emerald-600">do</span>
         </p>
       </div>
-      <div className="min-w-80 sm:min-w-[704px] flex items-center gap-1 sm:gap-3 absolute bottom-0 translate-y-1/2">
+      <div className="min-w-64 sm:min-w-80 md:min-w-[704px] flex items-center gap-1 sm:gap-3 absolute bottom-0 translate-y-1/2">
         <input
-          onKeyDown={(e) => {
+          onKeyDown={e => {
             if (e.key === 'Enter') handleNewTask();
           }}
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          className="w-full bg-zinc-800 py-2 px-3 sm:p-3 rounded"
+          onChange={e => setInputValue(e.target.value)}
+          className="w-full max-w-64 sm:max-w-none bg-zinc-800 py-2 px-3 sm:p-3 rounded hover:brightness-105 transition"
           type="text"
           placeholder="Adicione uma nova tarefa"
         />
